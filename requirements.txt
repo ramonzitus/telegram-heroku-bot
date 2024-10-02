@@ -1,10 +1,5 @@
 python-telegram-bot==13.7
 APScheduler==3.7.0
-import pytz
+pytz
 
-fuso_horario = pytz.timezone('America/Sao_Paulo')
-
-def agendar_mensagens():
-    scheduler = AsyncIOScheduler(timezone=fuso_horario)
-    # Resto do código permanece o mesmo
 
