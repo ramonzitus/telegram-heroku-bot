@@ -30,7 +30,7 @@ def agendar_mensagens():
         (12, 21, 12, 31),
         (13, 31, 13, 41),
         (18, 50, 19, 10),
-        (23, 35, 23, 45),
+        (00, 00, 00, 05),
     ]
 
     agora = datetime.now(fuso_horario)
