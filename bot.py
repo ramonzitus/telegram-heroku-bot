@@ -21,7 +21,7 @@ bot = Bot(token=TOKEN)
 async def enviar_mensagem():
     await bot.send_message(chat_id=CHAT_ID, text="Lembrete: Registre seu ponto no Coalize.")
 
-def agendar_mensagens():
+async def agendar_mensagens():
     scheduler = AsyncIOScheduler(timezone=fuso_horario)
 
     # Definir os períodos (hora_inicial, minuto_inicial, hora_final, minuto_final)
@@ -32,17 +32,18 @@ def agendar_mensagens():
         (18, 50, 19, 10),
     ]
 
+    agora = datetime.now(fuso_horario)
+
     for hora_inicio, minuto_inicio, hora_fim, minuto_fim in periodos:
-        # Calcular o próximo horário para o período atual
-        agora = datetime.now(fuso_horario)
         inicio = agora.replace(hour=hora_inicio, minute=minuto_inicio, second=0, microsecond=0)
         fim = agora.replace(hour=hora_fim, minute=minuto_fim, second=0, microsecond=0)
 
+        # Se o período já passou hoje, agendar para o próximo dia
         if agora > fim:
-            # Se já passou, agendar para o próximo dia
             inicio += timedelta(days=1)
             fim += timedelta(days=1)
 
+        # Gerar um horário aleatório dentro do período
         delta = fim - inicio
         segundos_aleatorios = random.randint(0, int(delta.total_seconds()))
         horario_envio = inicio + timedelta(seconds=segundos_aleatorios)
@@ -52,7 +53,7 @@ def agendar_mensagens():
         print(f"Mensagem agendada para: {horario_envio}")
 
     scheduler.start()
-    asyncio.get_event_loop().run_forever()
+    await asyncio.Event().wait()  # Mantém o script rodando
 
 if __name__ == "__main__":
-    agendar_mensagens()
+    asyncio.run(agendar_mensagens())
